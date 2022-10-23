@@ -1,5 +1,8 @@
 package com.koorung.blog.domain;
 
+import com.koorung.blog.exception.PasswordInvalidException;
+import com.koorung.blog.utils.pwchecker.PasswordChecker;
+import com.koorung.blog.utils.pwchecker.PasswordStatus;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,9 +12,11 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.koorung.blog.utils.pwchecker.PasswordStatus.ERROR;
+import static com.koorung.blog.utils.pwchecker.PasswordStatus.WEAK;
+
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
     @Id
@@ -19,13 +24,10 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-//    @NotEmpty(message = "이름은 반드시 입력해야 합니다.")
     private String username;
 
-//    @NotEmpty(message = "ID는 반드시 입력해야 합니다.")
     private String loginId;
 
-//    @NotEmpty(message = "비밀번호는 반드시 입력해야 합니다.")
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -39,7 +41,19 @@ public class Member {
         this.role = role;
     }
 
+    public Member() {
+        this.role = Role.GUEST;
+    }
+
     // User은 자신이 작성한 글 목록을 볼 수 있어야 한다.
     @OneToMany(mappedBy = "member")
     private List<Post> postList = new ArrayList<>();
+
+    public void checkPassword(String password) {
+        PasswordChecker passwordChecker = new PasswordChecker();
+        PasswordStatus passwordStatus = passwordChecker.check(password);
+        if(passwordStatus == WEAK || passwordStatus == ERROR) {
+            throw new PasswordInvalidException(passwordStatus);
+        }
+    }
 }

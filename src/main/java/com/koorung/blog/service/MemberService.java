@@ -14,6 +14,9 @@ public class MemberService {
 
     @Transactional
     public Member join(Member member) {
+        // 1. 패스워드 검증
+        member.checkPassword(member.getPassword());
+        // 2. 저장
         return memberRepository.save(member);
     }
 }
