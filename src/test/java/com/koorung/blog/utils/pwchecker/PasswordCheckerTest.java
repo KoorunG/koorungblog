@@ -18,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
  * 하나의 조건만 만족할 경우 -> WEAK
  * 하나도 만족하지 않을 경우 -> ERROR
  */
-@SpringBootTest
 class PasswordCheckerTest {
     private PasswordChecker pwChecker;
 
