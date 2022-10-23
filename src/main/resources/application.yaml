@@ -1,0 +1,24 @@
+# DataSource
+spring:
+  datasource:
+    username: sa
+    password:
+    url: jdbc:h2:tcp://localhost/~/jpatest
+    driver-class-name: org.h2.Driver
+
+
+  # JPA Option
+  jpa:
+    #    open-in-view: false  -> osiv설정을 끄면 뷰영역까지 영속성 컨텍스트가 유지되지 않는다.
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+# Logging
+logging:
+  level:
+    org.hibernate.type.descriptor.sql: trace
