@@ -6,6 +6,26 @@ import static com.koorung.blog.utils.pwchecker.PasswordStatus.*;
 
 public class PasswordChecker {
     public PasswordStatus check(String password) {
+        int successCount = getSuccessCount(password);
+        return getPasswordStatus(successCount);
+    }
+
+    private static PasswordStatus getPasswordStatus(int successCount) {
+        switch (successCount) {
+            case 4:
+                return STRONG;
+            case 3:
+                return GOOD;
+            case 2:
+                return NORMAL;
+            case 1:
+                return WEAK;
+            default:
+                return ERROR;
+        }
+    }
+
+    private int getSuccessCount(String password) {
         int successCount = 0;
 
         if(lengthCondition(password)) {
@@ -20,29 +40,9 @@ public class PasswordChecker {
         if(alphaCondition(password)) {
             successCount++;
         }
-
-        PasswordStatus passwordStatus;
-
-        switch (successCount) {
-            case 4:
-                passwordStatus = STRONG;
-                break;
-            case 3:
-                passwordStatus = GOOD;
-                break;
-            case 2:
-                passwordStatus = NORMAL;
-                break;
-            case 1:
-                passwordStatus = WEAK;
-                break;
-            default:
-                passwordStatus = ERROR;
-                break;
-        }
-
-        return passwordStatus;
+        return successCount;
     }
+
     private boolean lengthCondition(String password) {
         return password.length() >= 8 && password.length() < 12;
     }
