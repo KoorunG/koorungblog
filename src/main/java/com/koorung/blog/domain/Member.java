@@ -3,10 +3,8 @@ package com.koorung.blog.domain;
 import com.koorung.blog.exception.PasswordInvalidException;
 import com.koorung.blog.utils.pwchecker.PasswordChecker;
 import com.koorung.blog.utils.pwchecker.PasswordStatus;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,7 +15,7 @@ import static com.koorung.blog.utils.pwchecker.PasswordStatus.WEAK;
 
 @Entity
 @Getter
-public class Member {
+public class Member extends BaseTimeEntity{
 
     @Id
     @GeneratedValue
