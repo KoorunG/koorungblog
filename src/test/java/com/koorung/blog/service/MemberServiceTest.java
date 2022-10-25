@@ -2,6 +2,7 @@ package com.koorung.blog.service;
 
 import com.koorung.blog.domain.Member;
 import com.koorung.blog.domain.Role;
+import com.koorung.blog.exception.MemberNotExistException;
 import com.koorung.blog.exception.PasswordInvalidException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -83,5 +84,46 @@ class MemberServiceTest {
         Member member = new Member();
         //then
         assertThat(member).extracting("role").isEqualTo(Role.GUEST);
+    }
+
+    @Test
+    @DisplayName("가입되지 않은 유저정보로 로그인할 때 예외 발생")
+    void login_fail_not_exist_user() {
+        //given
+        Member member = Member.builder()
+                .loginId("user1234")
+                .role(Role.USER)
+                .password("user1234@!")
+                .username("일반유저")
+                .build();
+
+        memberService.join(member);
+
+        //when
+        assertThrows(MemberNotExistException.class, () -> {
+            memberService.login("adfs", "sdf");
+        });
+    }
+
+    @Test
+    @DisplayName("로그인 성공")
+    void login_success() {
+        //given
+        Member member = Member.builder()
+                .loginId("user1234")
+                .role(Role.USER)
+                .password("user1234@!")
+                .username("일반유저")
+                .build();
+
+        memberService.join(member);
+
+        //when
+        Member loginUser = memberService.login("user1234", "user1234@!");
+
+        //then
+        assertThat(loginUser).extracting("username").isEqualTo("일반유저");
+        assertThat(loginUser).extracting("loginId").isEqualTo("user1234");
+        assertThat(loginUser).extracting("password").isEqualTo("user1234@!");
     }
 }

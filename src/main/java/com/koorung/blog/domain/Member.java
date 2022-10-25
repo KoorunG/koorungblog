@@ -10,8 +10,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.koorung.blog.utils.pwchecker.PasswordStatus.ERROR;
-import static com.koorung.blog.utils.pwchecker.PasswordStatus.WEAK;
+import static com.koorung.blog.utils.pwchecker.PasswordStatus.*;
 
 @Entity
 @Getter
@@ -48,9 +47,8 @@ public class Member extends BaseTimeEntity{
     private List<Post> postList = new ArrayList<>();
 
     public void checkPassword(String password) {
-        PasswordChecker passwordChecker = new PasswordChecker();
-        PasswordStatus passwordStatus = passwordChecker.check(password);
-        if(passwordStatus == WEAK || passwordStatus == ERROR) {
+        PasswordStatus passwordStatus = PasswordChecker.check(password);
+        if(passwordStatus == NORMAL || passwordStatus == WEAK || passwordStatus == ERROR) {
             throw new PasswordInvalidException(passwordStatus);
         }
     }

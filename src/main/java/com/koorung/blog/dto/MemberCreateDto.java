@@ -1,17 +1,13 @@
 package com.koorung.blog.dto;
 
 import com.koorung.blog.domain.Role;
-import com.koorung.blog.exception.PasswordInvalidException;
-import com.koorung.blog.utils.pwchecker.PasswordChecker;
-import com.koorung.blog.utils.pwchecker.PasswordStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.NotEmpty;
-
-import static com.koorung.blog.utils.pwchecker.PasswordStatus.ERROR;
-import static com.koorung.blog.utils.pwchecker.PasswordStatus.WEAK;
 
 @Getter
 @Setter
@@ -25,6 +21,7 @@ public class MemberCreateDto {
     @NotEmpty(message = "비밀번호는 반드시 입력해야 합니다.")
     private String password;
 
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Builder
