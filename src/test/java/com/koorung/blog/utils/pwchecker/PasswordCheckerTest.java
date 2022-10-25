@@ -1,10 +1,8 @@
 package com.koorung.blog.utils.pwchecker;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  * 1. 길이는 8자이상 12자 미만이어야 한다
@@ -20,11 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 class PasswordCheckerTest {
     private PasswordChecker pwChecker;
-
-    @BeforeEach
-    void init() {
-        pwChecker = new PasswordChecker();
-    }
 
     @Test
     @DisplayName("패스워드가 조건을 모두 만족할 경우 STRONG")
@@ -123,7 +116,7 @@ class PasswordCheckerTest {
     }
 
     private void assertPassword(String password, PasswordStatus status) {
-        PasswordStatus passwordStatus = pwChecker.check(password);
+        PasswordStatus passwordStatus = PasswordChecker.check(password);
         Assertions.assertThat(passwordStatus).isEqualTo(status);
     }
 }
