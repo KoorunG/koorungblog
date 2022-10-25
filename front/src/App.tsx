@@ -1,12 +1,9 @@
-import { Container } from 'react-bootstrap';
 import './App.css';
-import PostList from './components/PostList';
+import AppRouter from './router/AppRouter';
 
 const App : React.FC = () => {
   return (
-    <Container className="p-2">
-      <PostList/>
-    </Container>
+    <AppRouter/>
   );
 }
 
