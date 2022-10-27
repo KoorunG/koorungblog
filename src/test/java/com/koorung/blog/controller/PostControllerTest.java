@@ -126,14 +126,17 @@ class PostControllerTest {
         assertThrows(PostNotExistException.class, () -> postService.getPostById(randomId));
     }
 
-    // JSON.stringify()
-    private String createPost(String title, String contents) throws JsonProcessingException {
-        PostCreateDto createDto = PostCreateDto.builder()
-                .title(title)
-                .contents(contents)
-                .build();
-        return objectMapper.writeValueAsString(createDto);
+    @Test
+    @DisplayName("존재하지 않는 글 삭제 요청 시 예외발생")
+    void deletePostFail() throws Exception {
+        // expected
+        mockMvc.perform(delete("/posts/{postId}", 1000L)
+                        .contentType(APPLICATION_JSON)
+                        .characterEncoding(UTF_8))
+                .andExpect(status().isNotFound())
+                .andDo(print());
     }
+
 
     @Test
     @DisplayName("글 수정하기 (Patch로 구현)")
@@ -158,5 +161,27 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.title").value("글수정테스트"))
                 .andExpect(jsonPath("$.contents").value("글수정테스트"))
                 .andDo(print());
+    }
+
+
+    @Test
+    @DisplayName("존재하지 않는 글 수정 요청 시 예외발생")
+    void updatePostFail() throws Exception {
+        // expected
+        mockMvc.perform(patch("/posts/{postId}", 1000L)
+                        .contentType(APPLICATION_JSON)
+                        .characterEncoding(UTF_8)
+                        .content(objectMapper.writeValueAsString(PostUpdateDto.builder().title("글수정테스트").contents("글수정테스트").build())))
+                .andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
+    // JSON.stringify()
+    private String createPost(String title, String contents) throws JsonProcessingException {
+        PostCreateDto createDto = PostCreateDto.builder()
+                .title(title)
+                .contents(contents)
+                .build();
+        return objectMapper.writeValueAsString(createDto);
     }
 }

@@ -1,15 +1,7 @@
 # DataSource
 spring:
   profiles:
-    default: dev
-
-  datasource:
-    # mysql 연결
-    username: koorung
-    password: 1234
-    url: jdbc:mysql://localhost:3306/koorungblog
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
+    default: test
 
   # JPA Option
   jpa:
