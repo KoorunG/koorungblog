@@ -3,6 +3,7 @@ import { Container } from 'react-bootstrap'
 
 const Login = () => {
   
+  // 로그인 post 요청을 보내는 함수
   const loginFunc = () => {
     axios.post("").then().catch();
   }

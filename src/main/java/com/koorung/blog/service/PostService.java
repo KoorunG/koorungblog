@@ -1,6 +1,7 @@
 package com.koorung.blog.service;
 
 import com.koorung.blog.domain.Post;
+import com.koorung.blog.dto.PostCreateDto;
 import com.koorung.blog.exception.PostNotExistException;
 import com.koorung.blog.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,9 @@ public class PostService {
 
     // 글을 등록하고 식별자를 리턴
     @Transactional
-    public Post savePost(Post post) {
-        return postRepository.save(post);
+    public Long savePost(PostCreateDto postCreateDto) {
+        Post post = new Post(postCreateDto);
+        return postRepository.save(post).getId();
     }
 
     public Post getPostById(Long id) {

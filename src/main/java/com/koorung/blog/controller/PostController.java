@@ -44,13 +44,6 @@ public class PostController {
 
     @PostMapping("/posts")
     public Long createPost(@RequestBody @Valid PostCreateDto postCreateDto) {
-
-        Post post = Post.builder()
-                .title(postCreateDto.getTitle())
-                .contents(postCreateDto.getContents())
-                .build();
-
-        // 저장 후
-        return postService.savePost(post).getId();
+        return postService.savePost(postCreateDto);
     }
 }

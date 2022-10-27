@@ -1,6 +1,7 @@
 package com.koorung.blog.service;
 
 import com.koorung.blog.domain.Post;
+import com.koorung.blog.dto.PostCreateDto;
 import com.koorung.blog.exception.PostNotExistException;
 import com.koorung.blog.repository.PostRepository;
 import org.assertj.core.api.Assertions;
@@ -31,13 +32,13 @@ class PostServiceTest {
     @DisplayName("글 하나 저장하기")
     void postOne() {
         //given
-        Post post = Post.builder()
+        PostCreateDto postCreateDto = PostCreateDto.builder()
                 .title("글제목")
                 .contents("글내용")
                 .build();
 
         //when
-        Long id = postService.savePost(post).getId();
+        Long id = postService.savePost(postCreateDto);
         Post saved = postRepository.findById(id).orElseThrow(PostNotExistException::new);
 
         //then

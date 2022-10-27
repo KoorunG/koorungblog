@@ -15,11 +15,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/members")
-    public void joinMember(@RequestBody MemberCreateDto memberCreateDto){
-        memberService.join(Member.builder()
-                .username(memberCreateDto.getName())
-                .loginId(memberCreateDto.getId())
-                .password(memberCreateDto.getPassword())
-                .build());
+    public Long joinMember(@RequestBody MemberCreateDto memberCreateDto){
+        return memberService.join(memberCreateDto);
     }
 }

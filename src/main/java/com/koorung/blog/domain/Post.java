@@ -1,5 +1,6 @@
 package com.koorung.blog.domain;
 
+import com.koorung.blog.dto.PostCreateDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,6 +32,11 @@ public class Post extends BaseTimeEntity {
     public Post(String title, String contents) {
         this.title = title;
         this.contents = contents;
+    }
+
+    public Post(PostCreateDto postCreateDto) {
+        this.title = postCreateDto.getTitle();
+        this.contents = postCreateDto.getContents();
     }
 
     // 연관관계 설정 메소드
