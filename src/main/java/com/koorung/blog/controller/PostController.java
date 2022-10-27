@@ -3,6 +3,7 @@ package com.koorung.blog.controller;
 import com.koorung.blog.domain.Post;
 import com.koorung.blog.dto.PostCreateDto;
 import com.koorung.blog.dto.PostResponseDto;
+import com.koorung.blog.dto.PostUpdateDto;
 import com.koorung.blog.repository.PostRepository;
 import com.koorung.blog.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -45,5 +46,16 @@ public class PostController {
     @PostMapping("/posts")
     public Long createPost(@RequestBody @Valid PostCreateDto postCreateDto) {
         return postService.savePost(postCreateDto);
+    }
+
+    @DeleteMapping("/posts/{postId}")
+    public void deletePost(@PathVariable Long postId) {
+        postService.deletePost(postId);
+    }
+
+    @PatchMapping("/posts/{postId}")
+    public PostResponseDto modifyPost(@PathVariable Long postId, @RequestBody PostUpdateDto postUpdateDto) {
+        Post post = postService.updatePost(postId, postUpdateDto);
+        return new PostResponseDto(post);
     }
 }

@@ -1,6 +1,7 @@
 package com.koorung.blog.domain;
 
 import com.koorung.blog.dto.PostCreateDto;
+import com.koorung.blog.dto.PostUpdateDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,5 +44,11 @@ public class Post extends BaseTimeEntity {
     public void configMember(Member member) {
         member.getPostList().add(this);
         this.member = member;
+    }
+
+    // 글 수정 메소드
+    public void modifyPost(PostUpdateDto postUpdateDto) {
+        this.title = postUpdateDto.getTitle();
+        this.contents = postUpdateDto.getContents();
     }
 }

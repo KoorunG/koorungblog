@@ -4,7 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.koorung.blog.domain.Post;
 import com.koorung.blog.dto.PostCreateDto;
+import com.koorung.blog.dto.PostUpdateDto;
+import com.koorung.blog.exception.PostNotExistException;
 import com.koorung.blog.repository.PostRepository;
+import com.koorung.blog.service.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,9 +21,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,6 +46,9 @@ class PostControllerTest {
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private PostService postService;
+
     @Test
     @DisplayName("글을 저장할 때 제목이나 내용이 없으면 예외 발생")
     void postNoTitle() throws Exception {
@@ -63,9 +69,9 @@ class PostControllerTest {
     void postSuccess() throws Exception {
         // expected
         mockMvc.perform(post("/posts")
-                .contentType(APPLICATION_JSON)
-                .characterEncoding(UTF_8)
-                .content(createPost("글제목", "글내용")))
+                        .contentType(APPLICATION_JSON)
+                        .characterEncoding(UTF_8)
+                        .content(createPost("글제목", "글내용")))
                 .andExpect(status().isOk())
 //                .andExpect(content().string("1")) // 단건 저장 후 식별자 리턴 (1)
                 .andDo(print());
@@ -97,6 +103,29 @@ class PostControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    @DisplayName("글 삭제하기")
+    void deletePost() throws Exception {
+        //given
+        List<Post> postList = IntStream.rangeClosed(1, 5).mapToObj(i -> Post.builder().title("제목" + i).contents("내용" + i).build()).collect(Collectors.toList());
+        postRepository.saveAll(postList);
+
+        List<Long> idList = postList.stream().map(Post::getId).collect(Collectors.toList());
+
+        // 0 ~ 4
+        int i = (int) (Math.random() * 5);
+        Long randomId = idList.get(i);
+
+        // expected
+        mockMvc.perform(delete("/posts/{postId}", randomId)
+                        .contentType(APPLICATION_JSON)
+                        .characterEncoding(UTF_8))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        assertThrows(PostNotExistException.class, () -> postService.getPostById(randomId));
+    }
+
     // JSON.stringify()
     private String createPost(String title, String contents) throws JsonProcessingException {
         PostCreateDto createDto = PostCreateDto.builder()
@@ -104,5 +133,30 @@ class PostControllerTest {
                 .contents(contents)
                 .build();
         return objectMapper.writeValueAsString(createDto);
+    }
+
+    @Test
+    @DisplayName("글 수정하기 (Patch로 구현)")
+    void modifyPost() throws Exception {
+        //given
+        List<PostCreateDto> postList = IntStream.rangeClosed(11, 15).mapToObj(i -> PostCreateDto.builder().title("제목" + i).contents("내용" + i).build()).collect(Collectors.toList());
+        List<Long> idList = postList.stream().map(dto -> postService.savePost(dto)).collect(Collectors.toList());
+
+        // 0 ~ 4
+        int i = (int) (Math.random() * 5);
+        Long randomId = idList.get(i);
+
+        // 글 생성 후 3초후에 수정
+        Thread.sleep(3000);
+
+        // expected
+        mockMvc.perform(patch("/posts/{postId}", randomId)
+                        .contentType(APPLICATION_JSON)
+                        .characterEncoding(UTF_8)
+                        .content(objectMapper.writeValueAsString(PostUpdateDto.builder().title("글수정테스트").contents("글수정테스트").build()))
+                ).andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("글수정테스트"))
+                .andExpect(jsonPath("$.contents").value("글수정테스트"))
+                .andDo(print());
     }
 }
