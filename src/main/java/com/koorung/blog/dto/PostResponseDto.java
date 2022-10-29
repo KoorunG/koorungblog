@@ -10,6 +10,8 @@ import java.time.format.FormatStyle;
 
 @Getter
 public class PostResponseDto {
+
+    private final Long id;
     private final String title;
     private final String contents;
     private final String createdDate;
@@ -17,6 +19,7 @@ public class PostResponseDto {
 
 
     public PostResponseDto(Post post) {
+        this.id = post.getId();
         this.title = post.getTitle();
         this.contents = post.getContents();
         // LocalDateTime -> Localize된 String으로 변환... (매우 유용할듯?)

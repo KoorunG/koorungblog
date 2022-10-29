@@ -1,6 +1,5 @@
 package com.koorung.blog.controller;
 
-import com.koorung.blog.domain.Member;
 import com.koorung.blog.dto.MemberCreateDto;
 import com.koorung.blog.service.MemberService;
 import lombok.RequiredArgsConstructor;
