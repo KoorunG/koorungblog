@@ -1,12 +1,17 @@
 import axios, { AxiosResponse } from "axios";
 import React, { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const baseUrl = "http://localhost:8080";
 
 const PostList = () => {
   const [posts, setPosts] = useState<IPost[]>([]);
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect(() => {
     axios.get(baseUrl + "/posts").then((res: AxiosResponse<IPost[]>) => {
@@ -16,6 +21,25 @@ const PostList = () => {
 
   return (
     <div>
+      <Button variant="primary" onClick={handleShow}>
+        Launch demo modal
+      </Button>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       {posts.map((post: IPost, index: number) => {
         return <Post post={post} index={index} key={post.id} />; // key값으로 Post의 식별자 사용
       })}
@@ -71,11 +95,9 @@ interface IPostWithIndex {
  * @param id post의 식별자
  */
 const deletePost = (id: number): void => {
-  axios
-    .delete(baseUrl + `/posts/${id}`)
-    .then(() => {
-      console.log("삭제 완료");
-    });
+  axios.delete(baseUrl + `/posts/${id}`).then(() => {
+    console.log("삭제 완료");
+  });
 };
 
 export default PostList;
