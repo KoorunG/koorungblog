@@ -1,10 +1,11 @@
 package com.koorung.blog.service;
 
-import com.koorung.blog.domain.Member;
-import com.koorung.blog.domain.Role;
-import com.koorung.blog.dto.MemberCreateDto;
-import com.koorung.blog.exception.MemberNotExistException;
-import com.koorung.blog.exception.PasswordInvalidException;
+import com.koorung.blog.domain.member.application.MemberService;
+import com.koorung.blog.domain.member.entity.Member;
+import com.koorung.blog.domain.member.entity.Role;
+import com.koorung.blog.domain.member.dto.MemberCreateDto;
+import com.koorung.blog.domain.member.exception.MemberNotExistException;
+import com.koorung.blog.domain.member.exception.PasswordInvalidException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,5 +1,7 @@
 package com.koorung.blog.utils.pwchecker;
 
+import com.koorung.blog.global.utils.pwchecker.PasswordChecker;
+import com.koorung.blog.global.utils.pwchecker.PasswordStatus;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

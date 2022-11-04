@@ -2,12 +2,12 @@ package com.koorung.blog.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.koorung.blog.domain.Post;
-import com.koorung.blog.dto.PostCreateDto;
-import com.koorung.blog.dto.PostUpdateDto;
-import com.koorung.blog.exception.PostNotExistException;
-import com.koorung.blog.repository.PostRepository;
-import com.koorung.blog.service.PostService;
+import com.koorung.blog.domain.post.entity.Post;
+import com.koorung.blog.domain.post.dto.PostCreateDto;
+import com.koorung.blog.domain.post.dto.PostUpdateDto;
+import com.koorung.blog.domain.post.exception.PostNotExistException;
+import com.koorung.blog.domain.post.repository.PostRepository;
+import com.koorung.blog.domain.post.application.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

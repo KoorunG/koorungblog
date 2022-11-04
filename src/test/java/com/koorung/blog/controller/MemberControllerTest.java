@@ -2,7 +2,7 @@ package com.koorung.blog.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.koorung.blog.dto.MemberCreateDto;
+import com.koorung.blog.domain.member.dto.MemberCreateDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
