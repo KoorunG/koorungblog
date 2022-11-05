@@ -1,5 +1,6 @@
 package com.koorung.blog.domain.relation;
 
+import com.koorung.blog.domain.BaseTimeEntity;
 import com.koorung.blog.domain.category.entity.Category;
 import com.koorung.blog.domain.post.entity.Post;
 import lombok.AccessLevel;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CategoryPost {
+public class CategoryPost extends BaseTimeEntity {
 
     @Id
     @GeneratedValue

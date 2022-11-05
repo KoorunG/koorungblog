@@ -1,5 +1,6 @@
 package com.koorung.blog.domain.category.entity;
 
+import com.koorung.blog.domain.BaseTimeEntity;
 import com.koorung.blog.domain.relation.CategoryPost;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Category {
+public class Category extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
