@@ -43,7 +43,7 @@ public class PostService {
     @Transactional
     public Post updatePost(Long id, PostUpdateDto postUpdateDto) {
         Post post = postRepository.findById(id).orElseThrow(PostNotExistException::new);
-        post.modifyPost(postUpdateDto);
+        post.updatePost(postUpdateDto);
         return post;
     }
 }

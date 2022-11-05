@@ -77,7 +77,8 @@ class MemberServiceTest {
     @DisplayName("회원가입 하지 않은 유저의 권한은 GUEST")
     void none_join_guest() {
         //given
-        Member member = new Member();
+        Member member = Member.builder()
+                .build();
         //then
         assertThat(member).extracting("role").isEqualTo(Role.GUEST);
     }
