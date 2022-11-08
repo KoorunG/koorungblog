@@ -3,8 +3,10 @@ package com.koorung.blog.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.koorung.blog.domain.member.dto.MemberCreateDto;
+import com.koorung.blog.domain.member.dto.MemberLoginDto;
 import com.koorung.blog.domain.member.entity.Address;
 import com.koorung.blog.domain.member.entity.Member;
+import com.koorung.blog.domain.member.entity.Role;
 import com.koorung.blog.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -145,17 +147,70 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("회원의 정보 수정")
-    void patch_member_info() {
-        //given
+    @DisplayName("DB에 정보가 없는 아이디, 비밀번호로 로그인 시도 시 로그인 실패")
+    void login_fail() throws Exception {
 
-        //when
-
-        //then
+        //given - 회원정보 넣기
+        memberRepository.save(Member.builder()
+                .loginId("koorung")
+                .password("test1234!@")
+                .role(Role.GUEST)
+                .username("쿠렁").build());
+        //expected - DB에 저장된 정보가 아닌 값을 넣으면 404 에러코드를 던지고 적절한 메세지 출력
+        assertLoginMember(MemberLoginDto.builder()
+                .loginId("koorung123")
+                .password("test1234!@")
+                .build())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value(404))
+                .andExpect(jsonPath("$.message").value("존재하지 않는 아이디입니다."))
+                .andDo(print());
 
     }
 
-    private String createMember(MemberCreateDto memberCreateDto) throws JsonProcessingException {
+    @Test
+    @DisplayName("로그인 성공")
+    void login_success() throws Exception {
+        //given - 회원정보 넣기
+        memberRepository.save(Member.builder()
+                .loginId("koorung")
+                .password("test1234!@")
+                .role(Role.GUEST)
+                .username("쿠렁").build());
+
+        //expected
+        assertLoginMember(MemberLoginDto.builder()
+                .loginId("koorung")
+                .password("test1234!@").build())
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("아이디와 비밀번호를 입력하지 않았을 때 Exception 처리")
+    void login_fail_exception() throws Exception {
+        //given - 회원정보 넣기
+        memberRepository.save(Member.builder()
+                .loginId("koorung")
+                .password("test1234!@")
+                .role(Role.GUEST)
+                .username("쿠렁").build());
+
+        //expected
+        assertLoginMember(MemberLoginDto.builder().build())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value(400))
+                .andExpect(jsonPath("$.message").value("필드 에러 발생"))
+                .andExpect(jsonPath("$.validation.loginId").value("아이디는 반드시 입력해야 합니다."))
+                .andExpect(jsonPath("$.validation.password").value("비밀번호는 반드시 입력해야 합니다."))
+                .andDo(print());
+    }
+
+    private String createLoginRequest(MemberLoginDto memberLoginDto) throws JsonProcessingException {
+        return objectMapper.writeValueAsString(memberLoginDto);
+    }
+
+    private String createMemberRequest(MemberCreateDto memberCreateDto) throws JsonProcessingException {
         return objectMapper.writeValueAsString(memberCreateDto);
     }
 
@@ -163,7 +218,14 @@ class MemberControllerTest {
         return mockMvc.perform(post("/members")
                 .contentType(APPLICATION_JSON)
                 .characterEncoding(UTF_8)
-                .content(createMember(memberCreateDto)));
+                .content(createMemberRequest(memberCreateDto)));
+    }
+
+    private ResultActions assertLoginMember(MemberLoginDto memberLoginDto) throws Exception {
+        return mockMvc.perform(post("/members/login")
+                .contentType(APPLICATION_JSON)
+                .characterEncoding(UTF_8)
+                .content(createLoginRequest(memberLoginDto)));
     }
 
 }

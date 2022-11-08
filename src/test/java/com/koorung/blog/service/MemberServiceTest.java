@@ -1,6 +1,7 @@
 package com.koorung.blog.service;
 
 import com.koorung.blog.domain.member.application.MemberService;
+import com.koorung.blog.domain.member.dto.MemberLoginDto;
 import com.koorung.blog.domain.member.dto.MemberUpdateDto;
 import com.koorung.blog.domain.member.entity.Address;
 import com.koorung.blog.domain.member.entity.Member;
@@ -119,7 +120,9 @@ class MemberServiceTest {
 
         //when
         assertThrows(MemberNotExistException.class, () -> {
-            memberService.login("adfs", "sdf");
+            memberService.login(MemberLoginDto.builder()
+                    .loginId("adfs")
+                    .password("sdf").build());
         });
     }
 
@@ -136,7 +139,9 @@ class MemberServiceTest {
         memberService.join(memberCreateDto);
 
         //when
-        Member loginUser = memberService.login("user1234", "user1234@!");
+        Member loginUser = memberService.login(MemberLoginDto.builder()
+                .loginId("user1234")
+                .password("user1234@!").build());
 
         //then
         assertThat(loginUser).extracting("username").isEqualTo("일반유저");

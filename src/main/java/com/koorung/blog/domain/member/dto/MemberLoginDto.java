@@ -3,6 +3,8 @@ package com.koorung.blog.domain.member.dto;
 import lombok.Builder;
 import lombok.Getter;
 
+import javax.validation.constraints.NotEmpty;
+
 /**
  * PackageName : com.koorung.blog.domain.member.dto
  * FileName : MemberLoginDto
@@ -12,7 +14,10 @@ import lombok.Getter;
  */
 @Getter
 public class MemberLoginDto {
+
+    @NotEmpty(message = "아이디는 반드시 입력해야 합니다.")
     private final String loginId;
+    @NotEmpty(message = "비밀번호는 반드시 입력해야 합니다.")
     private final String password;
 
     @Builder
