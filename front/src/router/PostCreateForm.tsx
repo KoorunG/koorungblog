@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const baseUrl = "http://localhost:8080";
 
@@ -11,11 +12,14 @@ export const PostCreateForm = () => {
     contents: string;
   }
 
+  const navigate = useNavigate();
+
   const postSubmit = (postForm: IPostCreateForm): void => {
     axios
       .post(baseUrl + "/posts", postForm)
       .then(() => {
-        alert("글 전송이 완료되었습니다.");
+        alert("글을 저장했습니다.");
+        navigate('/posts');
       })
       .catch((reason) => {
         const data = reason.response.data;

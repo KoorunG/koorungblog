@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, NavigateFunction, useNavigate, useNavigation } from "react-router-dom";
 
 const baseUrl = "http://localhost:8080";
 
@@ -16,7 +16,7 @@ interface IPost {
 interface IPostProps {
   post: IPost;
   index: number;
-  setPosts: Dispatch<SetStateAction<IPost[]>>;
+  navigate : NavigateFunction;
 }
 
 const promiseGetPosts = (
@@ -33,39 +33,18 @@ const promiseDelPost = (id: number) => {
 
 const PostList = () => {
   const [posts, setPosts] = useState<IPost[]>([]);
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   useEffect(() => {
     promiseGetPosts(setPosts);
   }, []);
 
+  const navigate = useNavigate();
+
   return (
     <div>
-      <Button variant="primary" onClick={handleShow}>
-        Launch demo modal
-      </Button>
-
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
       {posts.map((post: IPost, index: number) => {
         return (
-          <Post post={post} index={index} setPosts={setPosts} key={post.id} />
+          <Post post={post} index={index} navigate={navigate} key={post.id} />
         ); // key값으로 Post의 식별자 사용
       })}
       <br />
@@ -80,7 +59,7 @@ const PostList = () => {
   );
 };
 
-const Post: React.FC<IPostProps> = ({ post, index, setPosts }): JSX.Element => {
+const Post: React.FC<IPostProps> = ({ post, index, navigate }): JSX.Element => {
   return (
     <>
       <h3>{index + 1}번째 글</h3>
@@ -95,13 +74,14 @@ const Post: React.FC<IPostProps> = ({ post, index, setPosts }): JSX.Element => {
       <br />
       <Button
         onClick={() => {
-          Promise.allSettled([
-            promiseDelPost(post.id),
-            promiseGetPosts(setPosts),
-          ]);
+          const isDel = window.confirm("글을 삭제하시겠습니까?");
+          if (isDel) {
+            promiseDelPost(post.id);
+            window.alert("글이 삭제되었습니다.");
+            navigate(0);  // 새로고침
+          }
         }}
-        variant="danger"
-      >
+        variant="danger">
         삭제
       </Button>
     </>
