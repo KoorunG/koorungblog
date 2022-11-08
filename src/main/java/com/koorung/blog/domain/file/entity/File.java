@@ -19,10 +19,10 @@ public abstract class File extends BaseTimeEntity {
     // 실제 파일명
     private String fileName;
 
-    // 저장되는 파일명
+    // 저장되는 파일명 (난수값)
     private String storedName;
 
-    // 파일주소
-    private String fileAddress;
+    // 파일 저장 경로
+    private String path;
 
 }

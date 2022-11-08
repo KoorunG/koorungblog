@@ -1,7 +1,6 @@
 package com.koorung.blog.domain.post.entity;
 
 import com.koorung.blog.domain.BaseTimeEntity;
-import com.koorung.blog.domain.category.entity.Category;
 import com.koorung.blog.domain.file.entity.File;
 import com.koorung.blog.domain.member.entity.Member;
 import com.koorung.blog.domain.post.dto.PostCreateDto;
