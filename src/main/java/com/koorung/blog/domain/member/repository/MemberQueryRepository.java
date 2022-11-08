@@ -5,5 +5,6 @@ import com.koorung.blog.domain.member.entity.Member;
 import java.util.List;
 
 public interface MemberQueryRepository {
-    List<Member> findMember(String loginId, String password);
+    List<Member> findMemberByLoginId(String loginId);
+    List<Member> findMemberByCorrectLoginInfo(String loginId, String password);
 }
