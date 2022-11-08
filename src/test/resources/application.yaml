@@ -3,6 +3,14 @@ spring:
   profiles:
     default: test
 
+  # DB에 들어가는 값 확인용 임시 설정 #
+  datasource:
+    # mariadb 연결
+    username: koorung
+    password: 1234
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:13306/koolog
+
   # JPA Option
   jpa:
     #    open-in-view: false  -> osiv설정을 끄면 뷰영역까지 영속성 컨텍스트가 유지되지 않는다.
