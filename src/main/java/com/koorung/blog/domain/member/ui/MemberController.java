@@ -2,6 +2,7 @@ package com.koorung.blog.domain.member.ui;
 
 import com.koorung.blog.domain.member.application.MemberService;
 import com.koorung.blog.domain.member.dto.MemberCreateDto;
+import com.koorung.blog.domain.member.dto.MemberLoginDto;
 import com.koorung.blog.domain.member.dto.MemberResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -25,5 +26,10 @@ public class MemberController {
     public List<MemberResponseDto> findAllMembers() {
         return memberService.findAllMember().stream()
                 .map(MemberResponseDto::new).collect(Collectors.toList());
+    }
+
+    @PostMapping("/members/login")
+    public void loginMember(@RequestBody @Valid MemberLoginDto memberLoginDto) {
+        memberService.login(memberLoginDto);
     }
 }

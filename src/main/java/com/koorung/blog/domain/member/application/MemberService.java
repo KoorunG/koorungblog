@@ -1,6 +1,7 @@
 package com.koorung.blog.domain.member.application;
 
 import com.koorung.blog.domain.member.dto.MemberCreateDto;
+import com.koorung.blog.domain.member.dto.MemberLoginDto;
 import com.koorung.blog.domain.member.dto.MemberUpdateDto;
 import com.koorung.blog.domain.member.entity.Member;
 import com.koorung.blog.domain.member.entity.Role;
@@ -45,7 +46,10 @@ public class MemberService {
         return memberRepository.save(member).getId();
     }
 
-    public Member login(String loginId, String password) {
+    public Member login(MemberLoginDto memberLoginDto) {
+
+        String loginId = memberLoginDto.getLoginId();
+        String password = memberLoginDto.getPassword();
 
         // 로그인 진행
         List<Member> findMember = memberRepository.findMemberByCorrectLoginInfo(loginId, password);
