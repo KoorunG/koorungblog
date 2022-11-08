@@ -10,7 +10,7 @@ const Navigator = () => {
           <Nav className="me-auto">
             <Nav.Link href="/about">About</Nav.Link>
             <Nav.Link href="/daliy">Daliy</Nav.Link>
-            <Nav.Link href="/article">Article</Nav.Link>
+            <Nav.Link href="/posts">Posts</Nav.Link>
             <Nav.Link href="/login">Login</Nav.Link>
           </Nav>
         </Container>

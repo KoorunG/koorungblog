@@ -5,6 +5,7 @@ import { Button, Form } from "react-bootstrap";
 const baseUrl = "http://localhost:8080";
 
 export const PostCreateForm = () => {
+
   interface IPostCreateForm {
     title: string;
     contents: string;

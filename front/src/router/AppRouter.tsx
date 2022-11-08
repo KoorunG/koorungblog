@@ -14,8 +14,8 @@ const AppRouter = () => {
         <Routes>
           <Route path="/main/*" element={<Main />} />
           <Route path="/login/*" element={<Login />} />
-          <Route path="/article/*" element={<PostList />} />
-          <Route path="/articleForm/*" element={<PostForm />} />
+          <Route path="/posts/*" element={<PostList />} />
+          <Route path="/postForm/*" element={<PostForm />} />
           <Route path="/" element={<Navigate replace to="/main" />} />
           <Route path="/articleCreate/*" element={<PostCreateForm />} />
         </Routes>

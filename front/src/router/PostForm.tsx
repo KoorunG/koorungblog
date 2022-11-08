@@ -6,7 +6,7 @@ const PostForm = () => {
     <>
     <div>PostForm</div>
     <br/>
-    <Link to="/postsList">글목록으로 가기</Link>
+    <Link to="/posts">글목록으로 가기</Link>
     </>
   )
 }

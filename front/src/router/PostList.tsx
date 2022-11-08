@@ -1,22 +1,45 @@
-import axios, { AxiosResponse } from "axios";
-import React, { useEffect, useState } from "react";
+import axios from "axios";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const baseUrl = "http://localhost:8080";
 
+interface IPost {
+  id: number;
+  title: string;
+  contents: string;
+  createdDate: string;
+  lastModifiedDate: string;
+}
+
+interface IPostProps {
+  post: IPost;
+  index: number;
+  setPosts: Dispatch<SetStateAction<IPost[]>>;
+}
+
+const promiseGetPosts = (
+  setPosts: React.Dispatch<React.SetStateAction<IPost[]>>
+) => {
+  axios.get(baseUrl + "/posts").then((res) => {
+    setPosts(res.data);
+  });
+};
+
+const promiseDelPost = (id: number) => {
+  axios.delete(baseUrl + `/posts/${id}`);
+};
+
 const PostList = () => {
   const [posts, setPosts] = useState<IPost[]>([]);
-
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   useEffect(() => {
-    axios.get(baseUrl + "/posts").then((res: AxiosResponse<IPost[]>) => {
-      setPosts(res.data);
-    });
+    promiseGetPosts(setPosts);
   }, []);
 
   return (
@@ -41,18 +64,23 @@ const PostList = () => {
       </Modal>
 
       {posts.map((post: IPost, index: number) => {
-        return <Post post={post} index={index} key={post.id} />; // key값으로 Post의 식별자 사용
+        return (
+          <Post post={post} index={index} setPosts={setPosts} key={post.id} />
+        ); // key값으로 Post의 식별자 사용
       })}
       <br />
       <br />
       <Link to="/articleCreate">
         <Button variant="dark">글 등록</Button>
       </Link>
+      <br />
+      <br />
+      <Button onClick={() => {}}>글 가져오기</Button>
     </div>
   );
 };
 
-const Post: React.FC<IPostWithIndex> = ({ post, index }): JSX.Element => {
+const Post: React.FC<IPostProps> = ({ post, index, setPosts }): JSX.Element => {
   return (
     <>
       <h3>{index + 1}번째 글</h3>
@@ -67,7 +95,10 @@ const Post: React.FC<IPostWithIndex> = ({ post, index }): JSX.Element => {
       <br />
       <Button
         onClick={() => {
-          deletePost(post.id);
+          Promise.allSettled([
+            promiseDelPost(post.id),
+            promiseGetPosts(setPosts),
+          ]);
         }}
         variant="danger"
       >
@@ -75,29 +106,6 @@ const Post: React.FC<IPostWithIndex> = ({ post, index }): JSX.Element => {
       </Button>
     </>
   );
-};
-
-interface IPost {
-  id: number;
-  title: string;
-  contents: string;
-  createdDate: string;
-  lastModifiedDate: string;
-}
-
-interface IPostWithIndex {
-  post: IPost;
-  index: number;
-}
-
-/**
- * Post를 삭제하는 메소드
- * @param id post의 식별자
- */
-const deletePost = (id: number): void => {
-  axios.delete(baseUrl + `/posts/${id}`).then(() => {
-    console.log("삭제 완료");
-  });
 };
 
 export default PostList;
