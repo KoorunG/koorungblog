@@ -1,5 +1,4 @@
-import React from 'react'
-import { Button, Modal } from 'react-bootstrap'
+// import { Button, Modal } from 'react-bootstrap';
 
 interface IControlModal {
   modalTitle? : string;
@@ -11,7 +10,7 @@ interface IControlModal {
 const CustomModal = ({modalTitle='디폴트타이틀', modalBody='디폴트바디', showModal, handleClose} : IControlModal) => {
   return (
     <>
-      <Modal show={showModal} onHide={handleClose}>
+      {/* <Modal show={showModal} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>{modalTitle}</Modal.Title>
         </Modal.Header>
@@ -24,7 +23,7 @@ const CustomModal = ({modalTitle='디폴트타이틀', modalBody='디폴트바�
             확인
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
     </>
   )
 }

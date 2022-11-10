@@ -36,7 +36,11 @@ public class MemberController {
     @PostMapping("/login")
     public void loginMember(@RequestBody @Valid MemberLoginDto memberLoginDto, HttpSession session) {
         Member member = memberService.login(memberLoginDto);
-        session.setAttribute("loginMember", member.getLoginId());
+
+        session.setAttribute("loginMember", member.getLoginId());   // 로그인아이디를 세션에 넣음 (간단한 프로젝트이므로)
+        // 추후 Spring Security + JWT 적용해보자
+        // 참고 : https://velog.io/@jkijki12/Spirng-Security-Jwt-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0
+        session.setMaxInactiveInterval(20 * 60);    // 세션 20분으로 설정
     }
 
     @GetMapping("/logout")

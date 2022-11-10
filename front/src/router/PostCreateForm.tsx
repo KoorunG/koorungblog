@@ -1,12 +1,12 @@
+import { Container, Flex, Heading, Input, Textarea } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Box } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 const baseUrl = "http://localhost:8080";
 
 export const PostCreateForm = () => {
-
   interface IPostCreateForm {
     title: string;
     contents: string;
@@ -19,12 +19,12 @@ export const PostCreateForm = () => {
       .post(baseUrl + "/posts", postForm)
       .then(() => {
         alert("글을 저장했습니다.");
-        navigate('/posts');
+        navigate("/posts");
       })
       .catch((reason) => {
         const data = reason.response.data;
         console.log(reason);
-        
+
         if (data.validation.title != null) {
           alert(data.validation.title);
           return;
@@ -52,45 +52,39 @@ export const PostCreateForm = () => {
 
   return (
     <>
-      <h1>글 등록</h1>
-      <br />
-      <br />
+      <Container>
+        <Flex gap={100}>
+          <Box>
+            <Heading as={"h1"} size={"lg"}>
+              글 등록
+            </Heading>
+            <Input
+              placeholder="제목을 입력하세요"
+              onChange={(e) => {
+                changeTitle(e.currentTarget.value);
+              }}
+            />
+            <Textarea
+              placeholder="내용을 입력하세요"
+              onChange={(e) => {
+                changeContents(e.currentTarget.value);
+              }}
+            />
 
-      <Form>
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>제목</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="글제목을 입력하세요"
-            onChange={(e) => {
-              changeTitle(e.currentTarget.value);
-            }}
-          />
-        </Form.Group>
-
-        <Form.Label>내용</Form.Label>
-        <Form.Control
-          as="textarea"
-          placeholder="글내용을 입력하세요"
-          style={{ height: "100px" }}
-          onChange={(e) => {
-            changeContents(e.currentTarget.value);
-          }}
-        />
-
-        <Button
-          variant="primary"
-          type="button"
-          onClick={() => {
-            const confirmed = window.confirm("글을 저장하시겠습니까?");
-            if (confirmed) {
-              postSubmit(form);
-            }
-          }}
-        >
-          전송
-        </Button>
-      </Form>
+            <Button
+              bg={"green.500"}
+              color={"white"}
+              onClick={() => {
+                const confirmed = window.confirm("글을 저장하시겠습니까?");
+                if (confirmed) {
+                  postSubmit(form);
+                }
+              }}>
+              전송
+            </Button>
+          </Box>
+        </Flex>
+      </Container>
     </>
   );
 };

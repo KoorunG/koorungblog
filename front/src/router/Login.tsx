@@ -1,6 +1,7 @@
+import { Button, Container, Heading, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
 import axios from "axios";
+import React from "react";
 import { useState } from "react";
-import { Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import CustomModal from "../components/CustomModal";
 
@@ -21,11 +22,11 @@ const Login = () => {
   return (
     <>
       <Container>
-        <h3 className="p-3">Login</h3>
+        <Heading as={'h3'} size={'lg'}>로그인</Heading>
         <br />
         <form onSubmit={loginFunc}>
-          ID : <input type={"text"}></input> <br />
-          PW : <input type={"password"}></input>
+          ID : <Input placeholder='Enter your Id' />
+          PW : <PasswordInput/>
         </form>
 
           <Button onClick={() => {
@@ -43,6 +44,27 @@ const Login = () => {
     </>
   );
 };
+
+
+function PasswordInput() {
+  const [show, setShow] = React.useState(false)
+  const handleClick = () => setShow(!show)
+
+  return (
+    <InputGroup size='md'>
+      <Input
+        pr='4.5rem'
+        type={show ? 'text' : 'password'}
+        placeholder='Enter password'
+      />
+      <InputRightElement width='4.5rem'>
+        <Button h='1.75rem' size='sm' onClick={handleClick}>
+          {show ? 'Hide' : 'Show'}
+        </Button>
+      </InputRightElement>
+    </InputGroup>
+  )
+}
 
 
 export default Login;
