@@ -8,13 +8,13 @@ import com.koorung.blog.domain.member.entity.Address;
 import com.koorung.blog.domain.member.entity.Member;
 import com.koorung.blog.domain.member.entity.Role;
 import com.koorung.blog.domain.member.repository.MemberRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.nio.charset.StandardCharsets.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,6 +38,13 @@ class MemberControllerTest {
 
     @Autowired
     private MemberRepository repository;
+
+    private MockHttpSession mockHttpSession;
+
+    @BeforeEach
+    void init() {
+        mockHttpSession = new MockHttpSession();
+    }
 
     @AfterEach
     public void tearup() {
@@ -206,6 +214,73 @@ class MemberControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    @DisplayName("세션 기능 테스트")
+    void session_test() {
+        //given
+        memberRepository.save(Member.builder()
+                .loginId("koorung")
+                .password("test1234!@")
+                .role(Role.GUEST)
+                .username("쿠렁").build());
+
+        assertThat(mockHttpSession).isNotNull();
+    }
+
+    @Test
+    @DisplayName("로그인 성공 시 세션값 얻어오기")
+    void login_success_get_session() throws Exception {
+        //given
+        memberRepository.save(Member.builder()
+                .loginId("koorung")
+                .password("test1234!@")
+                .role(Role.GUEST)
+                .username("쿠렁").build());
+
+        //when
+        assertLoginMember(MemberLoginDto.builder()
+                .loginId("koorung")
+                .password("test1234!@")
+                .build())
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        assertThat(mockHttpSession.getAttribute("loginMember")).isEqualTo("koorung");
+    }
+
+    @Test
+    @DisplayName("로그아웃 테스트")
+    void logout() throws Exception {
+        //given
+
+        // 1.회원가입
+        memberRepository.save(Member.builder()
+                .loginId("koorung")
+                .password("test1234!@")
+                .role(Role.GUEST)
+                .username("쿠렁").build());
+
+        // 2.로그인
+        assertLoginMember(MemberLoginDto.builder()
+                .loginId("koorung")
+                .password("test1234!@")
+                .build())
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        mockHttpSession.getAttributeNames().asIterator().forEachRemaining((each) -> {
+            System.out.println(each + " ::: " + mockHttpSession.getAttribute(each));
+        });
+
+        // 3.로그아웃을 하면?
+        mockMvc.perform(get("/logout"))
+                .andDo(print());
+
+        mockHttpSession.getAttributeNames().asIterator().forEachRemaining((each) -> {
+            System.out.println(each + " ::: " + mockHttpSession.getAttribute(each));
+        });
+    }
+
     private String createLoginRequest(MemberLoginDto memberLoginDto) throws JsonProcessingException {
         return objectMapper.writeValueAsString(memberLoginDto);
     }
@@ -222,7 +297,7 @@ class MemberControllerTest {
     }
 
     private ResultActions assertLoginMember(MemberLoginDto memberLoginDto) throws Exception {
-        return mockMvc.perform(post("/members/login")
+        return mockMvc.perform(post("/login").session(mockHttpSession)
                 .contentType(APPLICATION_JSON)
                 .characterEncoding(UTF_8)
                 .content(createLoginRequest(memberLoginDto)));
