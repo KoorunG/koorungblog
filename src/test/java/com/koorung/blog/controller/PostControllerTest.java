@@ -2,6 +2,9 @@ package com.koorung.blog.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.koorung.blog.domain.member.entity.Member;
+import com.koorung.blog.domain.member.entity.Role;
+import com.koorung.blog.domain.member.repository.MemberRepository;
 import com.koorung.blog.domain.post.entity.Post;
 import com.koorung.blog.domain.post.dto.PostCreateDto;
 import com.koorung.blog.domain.post.dto.PostUpdateDto;
@@ -11,11 +14,13 @@ import com.koorung.blog.domain.post.application.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -44,6 +49,9 @@ class PostControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
     private PostRepository postRepository;
 
     @Autowired
@@ -56,7 +64,7 @@ class PostControllerTest {
         mockMvc.perform(post("/posts")
                         .contentType(APPLICATION_JSON)
                         .characterEncoding(UTF_8)
-                        .content(createPost("", "")))
+                        .content(createPostWithMember("", "", createDefaultMember())))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.validation.size()").isNumber())
                 .andExpect(jsonPath("$.validation.title").value("제목은 반드시 입력해야 합니다."))
@@ -71,7 +79,7 @@ class PostControllerTest {
         mockMvc.perform(post("/posts")
                         .contentType(APPLICATION_JSON)
                         .characterEncoding(UTF_8)
-                        .content(createPost("글제목", "글내용")))
+                        .content(createPostWithMember("글제목", "글내용", createDefaultMember())))
                 .andExpect(status().isOk())
 //                .andExpect(content().string("1")) // 단건 저장 후 식별자 리턴 (1)
                 .andDo(print());
@@ -141,8 +149,14 @@ class PostControllerTest {
     @Test
     @DisplayName("글 수정하기 (Patch로 구현)")
     void modifyPost() throws Exception {
+
         //given
-        List<PostCreateDto> postList = IntStream.rangeClosed(11, 15).mapToObj(i -> PostCreateDto.builder().title("제목" + i).contents("내용" + i).build()).collect(Collectors.toList());
+        List<PostCreateDto> postList = IntStream.rangeClosed(11, 15).mapToObj(i -> PostCreateDto.builder()
+                .memberId(createDefaultMember().getId())
+                .title("제목" + i)
+                .contents("내용" + i)
+                .build()).collect(Collectors.toList());
+
         List<Long> idList = postList.stream().map(dto -> postService.savePost(dto)).collect(Collectors.toList());
 
         // 0 ~ 4
@@ -176,9 +190,49 @@ class PostControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    @DisplayName("글을 등록할 때 유저정보가 같이 들어오는지 테스트")
+    void post_with_member() {
+        // expected
+        IntStream.rangeClosed(1, 5).forEach(i -> {
+            try {
+                mockMvc.perform(post("/posts")
+                        .contentType(APPLICATION_JSON)
+                        .characterEncoding(UTF_8)
+                        .content(createPostWithMember("제목" + i, "내용" + i, createDefaultMember())))
+                        .andExpect(status().isOk())
+                        .andDo(print());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    private Member createDefaultMember() {
+        return memberRepository.save(Member.builder()
+                .loginId("test")
+                .password("test1234!@")
+                .username("디폴트멤버")
+                .role(Role.ADMIN)
+                .build());
+    }
+
     // JSON.stringify()
-    private String createPost(String title, String contents) throws JsonProcessingException {
+//    private String createPost(String title, String contents) throws JsonProcessingException {
+//
+//        Member mockMember = Mockito.mock(Member.class);
+//        PostCreateDto createDto = PostCreateDto.builder()
+//                .memberId(mockMember.getId())
+//                .title(title)
+//                .contents(contents)
+//                .build();
+//        return objectMapper.writeValueAsString(createDto);
+//    }
+
+
+    private String createPostWithMember(String title, String contents, Member member) throws JsonProcessingException {
         PostCreateDto createDto = PostCreateDto.builder()
+                .memberId(member.getId())
                 .title(title)
                 .contents(contents)
                 .build();

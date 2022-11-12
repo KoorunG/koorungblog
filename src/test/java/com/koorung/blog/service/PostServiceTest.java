@@ -1,5 +1,9 @@
 package com.koorung.blog.service;
 
+import com.koorung.blog.domain.member.entity.Member;
+import com.koorung.blog.domain.member.entity.Role;
+import com.koorung.blog.domain.member.exception.MemberNotExistException;
+import com.koorung.blog.domain.member.repository.MemberRepository;
 import com.koorung.blog.domain.post.application.PostService;
 import com.koorung.blog.domain.post.entity.Post;
 import com.koorung.blog.domain.post.dto.PostCreateDto;
@@ -33,6 +37,9 @@ class PostServiceTest {
     private PostRepository postRepository;
 
     @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
     private PostService postService;
 
     @Test
@@ -40,6 +47,7 @@ class PostServiceTest {
     void postOne() {
         //given
         PostCreateDto postCreateDto = PostCreateDto.builder()
+                .memberId(createDefaultMember().getId())
                 .title("글제목")
                 .contents("글내용")
                 .build();
@@ -128,5 +136,49 @@ class PostServiceTest {
         //then
         assertThat(updatePost).extracting("title").isEqualTo("글수정테스트");
         assertThat(updatePost).extracting("contents").isEqualTo("글수정테스트");
+    }
+
+
+    @Test
+    @DisplayName("유저가 지정된 상태로 글쓰기 테스트")
+    void post_with_member() {
+        //given
+
+        // 테스트용 멤버 저장
+        Member member = memberRepository.save(Member.builder()
+                .loginId("koorung23")
+                .password("test1234!@")
+                .username("쿠렁")
+                .role(Role.ADMIN).build());
+
+        // 멤버 검색(로그인)
+        Member loginMember = memberRepository.findById(member.getId()).orElseThrow(MemberNotExistException::new);
+
+        //when
+        Long saveId = postService.savePost(PostCreateDto.builder()
+                .memberId(loginMember.getId())
+                .title("글제목@@@@")
+                .contents("글내용@@@@")
+                .build());
+
+        Post findPost = postService.getPostById(saveId);
+
+        //then
+        // 왜 1+n 이 걸리는거지? -> cascade나 orphanRemoval 옵션을 키면 그 엔티티도 참조하므로!
+        // @Builder를 사용할 경우 다른 엔티티를 참조하는 필드를 파라미터로 넘길 때 주의해야한다!
+        assertThat(findPost)
+                .isNotNull()
+                .extracting("member")
+                .extracting("loginId")
+                .isEqualTo("koorung23");
+    }
+
+    private Member createDefaultMember() {
+        return memberRepository.save(Member.builder()
+                .loginId("test")
+                .password("test1234!@")
+                .username("디폴트멤버")
+                .role(Role.ADMIN)
+                .build());
     }
 }

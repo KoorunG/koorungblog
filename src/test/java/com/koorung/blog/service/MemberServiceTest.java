@@ -11,6 +11,8 @@ import com.koorung.blog.domain.member.exception.AlreadyExistMemberException;
 import com.koorung.blog.domain.member.exception.MemberNotExistException;
 import com.koorung.blog.domain.member.exception.PasswordInvalidException;
 import com.koorung.blog.domain.member.repository.MemberRepository;
+import com.koorung.blog.domain.post.entity.Post;
+import com.koorung.blog.domain.post.repository.PostRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,9 @@ class MemberServiceTest {
 
     @Autowired
     private MemberRepository memberRepository;
-    private Long id;
+
+    @Autowired
+    private PostRepository postRepository;
 
     @Test
     @DisplayName("회원가입시 비밀번호가 조건에 맞지 않으면 예외 발생")
@@ -129,7 +133,7 @@ class MemberServiceTest {
     @Test
     @DisplayName("로그인 성공")
     void login_success() {
-        //givenㄹ
+        //given
         MemberCreateDto memberCreateDto = MemberCreateDto.builder()
                 .id("user1234")
                 .password("user1234@!")
@@ -217,5 +221,30 @@ class MemberServiceTest {
         assertThat(updatedMember).extracting("email").isEqualTo("modifytest@test.com");
     }
 
-    // member를 찾을때 @PathVariable을 쓸 필요가 있을까?
+    @Test
+    @DisplayName("유저가 쓴 글을 모두 조회")
+    void get_all_posts() {
+        //given
+
+        Member savedMember = memberRepository.save(Member.builder()
+                .loginId("koorung")
+                .username("쿠렁")
+                .password("test1234!@")
+                .role(Role.ADMIN).build());
+
+        List<Post> postList = IntStream.rangeClosed(1, 10).mapToObj(i -> Post.builder()
+                .title("제목" + i)
+                .contents("내용" + i).build()).collect(Collectors.toList());
+
+        postList.forEach((post) -> {
+            post.configMember(savedMember);
+        });
+
+        postRepository.saveAll(postList);
+
+        //when
+
+        //then
+
+    }
 }
