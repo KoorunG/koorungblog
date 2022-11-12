@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const baseUrl = "http://localhost:8080";
 
-export const PostCreateForm = () => {
+const PostCreateForm = () => {
   interface IPostCreateForm {
     title: string;
     contents: string;
@@ -88,3 +88,5 @@ export const PostCreateForm = () => {
     </>
   );
 };
+
+export default PostCreateForm;

@@ -9,8 +9,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Link, NavigateFunction, useNavigate } from "react-router-dom";
-
-const baseUrl = "http://localhost:8080";
+import { BASE_URL } from "../global/Constants";
 
 interface IPost {
   id: number;
@@ -29,13 +28,13 @@ interface IPostProps {
 const promiseGetPosts = (
   setPosts: React.Dispatch<React.SetStateAction<IPost[]>>
 ) => {
-  axios.get(baseUrl + "/posts").then((res) => {
+  axios.get(BASE_URL + "/posts").then((res) => {
     setPosts(res.data);
   });
 };
 
 const promiseDelPost = (id: number) => {
-  axios.delete(baseUrl + `/posts/${id}`);
+  axios.delete(BASE_URL + `/posts/${id}`);
 };
 
 const PostList = () => {

@@ -4,7 +4,8 @@ import PostForm from "./PostForm";
 import Login from "./Login";
 import Main from "./Main";
 import PostList from "./PostList";
-import { PostCreateForm } from "./PostCreateForm";
+import PostCreateForm from "./PostCreateForm";
+import Join from "./Join";
 
 const AppRouter = () => {
   return (
@@ -18,6 +19,7 @@ const AppRouter = () => {
           <Route path="/postForm/*" element={<PostForm />} />
           <Route path="/" element={<Navigate replace to="/main" />} />
           <Route path="/articleCreate/*" element={<PostCreateForm />} />
+          <Route path="/join" element={<Join/>}/>
         </Routes>
       </BrowserRouter>
     </>
