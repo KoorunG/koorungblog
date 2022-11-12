@@ -6,12 +6,12 @@ import com.koorung.blog.domain.member.dto.MemberCreateDto;
 import com.koorung.blog.domain.member.dto.MemberLoginDto;
 import com.koorung.blog.domain.member.dto.MemberResponseDto;
 import com.koorung.blog.domain.member.entity.Member;
+import com.koorung.blog.domain.post.application.PostService;
+import com.koorung.blog.domain.post.dto.PostResponseDto;
+import com.koorung.blog.domain.post.entity.Post;
 import com.koorung.blog.global.dto.Result;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 public class MemberController {
 
     private final MemberService memberService;
+    private final PostService postService;
 
     @PostMapping("/members")
     public Long joinMember(@RequestBody @Valid MemberCreateDto memberCreateDto){
@@ -47,12 +48,21 @@ public class MemberController {
          */
 
         // 세션 20분으로 설정
-        session.setMaxInactiveInterval(20 * 60);
+//        session.setMaxInactiveInterval(20 * 60);
         return new LoginResponseDto(member);
     }
 
     @GetMapping("/logout")
     public void logoutMember(HttpSession session) {
         session.invalidate();
+    }
+
+    @GetMapping("/members/{memberId}/posts")
+    public Result<PostResponseDto> findPostsWithMember(@PathVariable Long memberId) {
+        List<Post> posts = postService.getPostAllWithMember(memberId);
+        List<PostResponseDto> postResponseDtos = posts.stream().map(PostResponseDto::new).collect(Collectors.toList());
+        Result<PostResponseDto> result = new Result<>();
+        result.addData(postResponseDtos);
+        return result;
     }
 }

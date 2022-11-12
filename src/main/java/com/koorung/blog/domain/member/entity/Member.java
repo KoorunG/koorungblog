@@ -49,7 +49,7 @@ public class Member extends BaseTimeEntity {
     private List<Post> postList = new ArrayList<>();
 
     @Builder
-    public Member(String loginId, String password, String username, String email, Role role, Address address, File file, List<Post> postList) {
+    public Member(String loginId, String password, String username, String email, Role role, Address address, File file) {
         this.loginId = loginId;
         this.password = password;
         this.username = username;
@@ -62,7 +62,7 @@ public class Member extends BaseTimeEntity {
         this.lastAccessDate = LocalDateTime.now();
         // 초기 활성화상태 = true
         this.activated = true;
-        this.postList = postList;
+//        this.postList = new ArrayList<>();
     }
 
     // ############################# 도메인 비즈니스 로직 ################################# //

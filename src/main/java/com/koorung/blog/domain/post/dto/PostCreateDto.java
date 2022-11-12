@@ -15,9 +15,12 @@ public class PostCreateDto {
     @NotBlank(message = "내용은 반드시 입력해야 합니다.")
     private final String contents;
 
+    private final Long memberId;
+
     @Builder
-    public PostCreateDto(String title, String contents) {
+    public PostCreateDto(String title, String contents, Long memberId) {
         this.title = title;
         this.contents = contents;
+        this.memberId = memberId;
     }
 }

@@ -1,5 +1,9 @@
 package com.koorung.blog.domain.post.application;
 
+import com.koorung.blog.domain.member.application.MemberService;
+import com.koorung.blog.domain.member.entity.Member;
+import com.koorung.blog.domain.member.exception.MemberNotExistException;
+import com.koorung.blog.domain.member.repository.MemberRepository;
 import com.koorung.blog.domain.post.dto.PostCreateDto;
 import com.koorung.blog.domain.post.dto.PostUpdateDto;
 import com.koorung.blog.domain.post.entity.Post;
@@ -17,11 +21,18 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final MemberRepository memberRepository;
 
     // 글을 등록하고 식별자를 리턴
     @Transactional
     public Long savePost(PostCreateDto postCreateDto) {
         Post post = new Post(postCreateDto);
+
+        Long memberId = postCreateDto.getMemberId();
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistException::new);
+
+        // postCreateDto에서 member을 넘겨주지 않을 경우 연관관계 설정 메소드 호출 X
+        if(member != null) post.configMember(member);
         return postRepository.save(post).getId();
     }
 
@@ -45,5 +56,10 @@ public class PostService {
         Post post = postRepository.findById(id).orElseThrow(PostNotExistException::new);
         post.updatePost(postUpdateDto);
         return post;
+    }
+
+    public List<Post> getPostAllWithMember(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistException::new);
+        return postRepository.findPostWithMember(member);
     }
 }
