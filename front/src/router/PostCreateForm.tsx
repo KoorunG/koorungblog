@@ -1,18 +1,34 @@
 import { Container, Flex, Heading, Input, Textarea } from "@chakra-ui/react";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Box } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { IUser } from "../global/Types";
 
 const baseUrl = "http://localhost:8080";
 
-const PostCreateForm = () => {
-  interface IPostCreateForm {
-    title: string;
-    contents: string;
-  }
+interface IPostCreateFormProps {
+  user: IUser;
+}
 
+interface IPostCreateForm {
+  memberId?: number;
+  title: string;
+  contents: string;
+}
+
+const PostCreateForm = ({ user }: IPostCreateFormProps) => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user != null) console.table(user);
+  }, []);
+
+  const [form, setForm] = useState<IPostCreateForm>({
+    memberId: user.id,
+    title: "",
+    contents: "",
+  });
 
   const postSubmit = (postForm: IPostCreateForm): void => {
     axios
@@ -44,11 +60,6 @@ const PostCreateForm = () => {
   const changeContents = (contents: string): void => {
     setForm({ ...form, contents: contents });
   };
-
-  const [form, setForm] = useState<IPostCreateForm>({
-    title: "",
-    contents: "",
-  });
 
   return (
     <>

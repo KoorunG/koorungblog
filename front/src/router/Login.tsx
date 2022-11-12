@@ -9,25 +9,37 @@ import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../global/Constants";
 import CustomModal from "../components/CustomModal";
 import { PasswordInput } from "../components/PasswordInput";
+import { IUser } from "../global/Types";
 
-const Login = () => {
-  const [loginId, setLoginId] = useState("");
-  const [password, setPassword] = useState("");
+
+interface ILoginRequest {
+  loginId : string;
+  password : string;
+}
+
+interface ILoginProps {
+  setUser : React.Dispatch<React.SetStateAction<IUser>>;
+}
+
+
+const Login = ({setUser} : ILoginProps) => {
+  const [loginRequest, setLoginRequest] = useState<ILoginRequest>({loginId : '', password : ''});
 
   // 로그인 post 요청을 보내는 함수
   const loginFunc = async () => {
     // #1. 에러처리
-    const login = await axios
-      .post(BASE_URL + "/login", { loginId, password })
+    const res = await axios
+      .post(BASE_URL + "/login", loginRequest)
       .catch((err) => {
         const { errorCode, message } = err.response.data;
         window.alert(`${message} ::: [${errorCode}]`);
       });
 
     // #2. catch에서 잡히지 않을 경우
-    if (login) {
-      const { username, role } = login.data;
+    if (res) {
+      const { id, username, role } : IUser = res.data;
       window.alert(`${username}님 환영합니다! :: 권한 [${role}]`);
+      setUser({id, username, role});
       navigate("/");
     }
   };
@@ -37,11 +49,11 @@ const Login = () => {
   }
 
   const handleLoginId: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    setLoginId(e.currentTarget.value);
+    setLoginRequest({...loginRequest, loginId : e.currentTarget.value });
   };
 
   const handlePassword: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    setPassword(e.currentTarget.value);
+    setLoginRequest({...loginRequest, password : e.currentTarget.value});
   };
 
   const navigate = useNavigate();
