@@ -14,7 +14,6 @@ import javax.validation.constraints.NotEmpty;
  */
 @Getter
 public class MemberLoginDto {
-
     @NotEmpty(message = "아이디는 반드시 입력해야 합니다.")
     private final String loginId;
     @NotEmpty(message = "비밀번호는 반드시 입력해야 합니다.")
