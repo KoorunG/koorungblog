@@ -1,11 +1,9 @@
 import {
   Box,
-  Button,
-  Center,
-  Container,
+  Button, Container,
   Heading,
   Input,
-  VStack,
+  VStack
 } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useState } from "react";
@@ -23,7 +21,7 @@ interface JoinData {
   zipCode?: string;
 }
 
-const Join = () => {
+const Join = () : JSX.Element => {
   const [joinData, setJoinData] = useState<JoinData>({
     id: "",
     name: "",

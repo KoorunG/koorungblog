@@ -22,7 +22,7 @@ interface ILoginProps {
 }
 
 
-const Login = ({setUser} : ILoginProps) => {
+const Login = ({setUser} : ILoginProps) : JSX.Element => {
   const [loginRequest, setLoginRequest] = useState<ILoginRequest>({loginId : '', password : ''});
 
   // 로그인 post 요청을 보내는 함수

@@ -17,7 +17,7 @@ const CustomModal = ({
   buttonName = "디폴트버튼",
   modalTitle = "디폴트타이틀",
   modalBody = "디폴트바디",
-}: IControlModal) => {
+}: IControlModal) : JSX.Element => {
   // 버튼 제어용 변수선언
   const { isOpen, onOpen, onClose } = useDisclosure();
 

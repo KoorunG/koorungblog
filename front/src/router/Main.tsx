@@ -6,8 +6,7 @@ interface IMainProps {
   user : IUser;
 }
 
-const Main = ({user} : IMainProps) => {
-
+const Main = ({user} : IMainProps) : JSX.Element => {
   useEffect(() => {
     if(user != null) console.table(user);
   }, []);

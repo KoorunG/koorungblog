@@ -2,7 +2,7 @@ import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, Link, Spacer, useColorMode } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
-const Navigator = () => {
+const Navigator = () : JSX.Element => {
   const navigate = useNavigate();
 
   return (
@@ -59,12 +59,12 @@ const Navigator = () => {
   );
 };
 
-const DarkMode = () => {
+const DarkMode = () : JSX.Element => {
   const { colorMode, toggleColorMode } = useColorMode();
   return <Button w={50} onClick={toggleColorMode}>{colorMode === "light" ? <MoonIcon /> : <SunIcon />}</Button>;
 };
 
-const Profile = () => {
+const Profile = () : JSX.Element => {
   return (
     <Button w={50}>
       <span className="material-symbols-outlined">person</span>
