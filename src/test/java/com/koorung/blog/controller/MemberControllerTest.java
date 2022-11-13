@@ -9,6 +9,7 @@ import com.koorung.blog.domain.member.entity.Member;
 import com.koorung.blog.domain.member.entity.Role;
 import com.koorung.blog.domain.member.repository.MemberRepository;
 import com.koorung.blog.domain.post.repository.PostRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -246,7 +247,7 @@ class MemberControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
 
-        assertThat(mockHttpSession.getAttribute("loginMember")).isEqualTo("koorung");
+        assertThat(mockHttpSession.getAttribute("loginId")).isEqualTo("koorung");
     }
 
     @Test
@@ -274,12 +275,15 @@ class MemberControllerTest {
         });
 
         // 3.로그아웃을 하면?
-        mockMvc.perform(get("/logout"))
+        mockMvc.perform(get("/logout").session(mockHttpSession))
                 .andDo(print());
 
-        mockHttpSession.getAttributeNames().asIterator().forEachRemaining((each) -> {
-            System.out.println(each + " ::: " + mockHttpSession.getAttribute(each));
-        });
+//        mockHttpSession.getAttributeNames().asIterator().forEachRemaining((each) -> {
+//            System.out.println(each + " ::: " + mockHttpSession.getAttribute(each));
+//        });
+
+        // 로그아웃 -> session.invalidate()
+        assertThat(mockHttpSession.isInvalid()).isTrue();
     }
 
     private String createLoginRequest(MemberLoginDto memberLoginDto) throws JsonProcessingException {
