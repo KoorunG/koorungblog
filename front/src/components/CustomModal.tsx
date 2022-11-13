@@ -1,30 +1,32 @@
-import {
-  Button, Modal, ModalBody,
-  ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure
-} from "@chakra-ui/react";
+import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from "@chakra-ui/react";
+import { AllowedColorScheme } from "../global/Types";
 
 interface IControlModal {
-  confirmFunc? : React.MouseEventHandler<HTMLButtonElement>;
-  colorScheme? : string;
+  confirmFunc?: React.MouseEventHandler<HTMLButtonElement>;
+  colorScheme?: AllowedColorScheme;
   buttonName?: string;
   modalTitle?: string;
   modalBody?: string;
 }
 
 const CustomModal = ({
-  confirmFunc = () => {console.log('디폴트함수')},
-  colorScheme = "teal",
+  confirmFunc = () => {
+    console.log("디폴트함수");
+  },
+  colorScheme = "linkedin",
   buttonName = "디폴트버튼",
   modalTitle = "디폴트타이틀",
   modalBody = "디폴트바디",
-}: IControlModal) : JSX.Element => {
+}: IControlModal): JSX.Element => {
   // 버튼 제어용 변수선언
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   // 랜더링
   return (
     <>
-      <Button onClick={onOpen} colorScheme={colorScheme}>{buttonName}</Button>
+      <Button onClick={onOpen} colorScheme={colorScheme}>
+        {buttonName}
+      </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

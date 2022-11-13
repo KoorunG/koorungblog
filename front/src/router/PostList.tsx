@@ -1,8 +1,8 @@
 import { Button, Container, SimpleGrid } from "@chakra-ui/react";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Post from "../components/Post";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import PostPrev from "../components/PostPrev";
 import { BASE_URL } from "../global/Constants";
 import { IPost, IUser } from "../global/Types";
 
@@ -22,8 +22,6 @@ const PostList = ({ user }: IPostListPorps): JSX.Element => {
     })();
   }, []);
 
-  const navigate = useNavigate();
-
   const getAllPosts = async () => {
     const posts = await axios.get(BASE_URL + `/members/${user?.id}/posts`)
     .catch((err) => {
@@ -39,7 +37,7 @@ const PostList = ({ user }: IPostListPorps): JSX.Element => {
       <Container>
         <SimpleGrid column={3} spacing={10}>
           {posts.map((post: IPost, index: number) => {
-            return <Post post={post} index={index} navigate={navigate} key={post.id} />; // key값으로 Post의 식별자 사용
+            return <PostPrev post={post} key={post.id} />; // key값으로 Post의 식별자 사용
           })}
         </SimpleGrid>
         <Link to="/form/posts">
