@@ -13,6 +13,7 @@ import com.koorung.blog.global.dto.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
@@ -26,7 +27,7 @@ public class MemberController {
     private final PostService postService;
 
     @PostMapping("/members")
-    public Long joinMember(@RequestBody @Valid MemberCreateDto memberCreateDto){
+    public Long joinMember(@RequestBody @Valid MemberCreateDto memberCreateDto) {
         return memberService.join(memberCreateDto);
     }
 

@@ -23,16 +23,6 @@ public class PostController {
     private final PostService postService;
     private final PostRepository postRepository;
 
-    @PostConstruct  // 테스트용으로 초기 글 5개 저장
-    public void init() {
-        List<Post> postList = IntStream.rangeClosed(1, 5).mapToObj(i ->
-                Post.builder()
-                        .title("제목 " + i)
-                        .contents("내용 " + i)
-                        .build()).collect(Collectors.toList());
-        postRepository.saveAll(postList);
-    }
-
     @GetMapping("/posts")
     public List<PostResponseDto> getPostAll() {
         return postService.getPostAll().stream().map(PostResponseDto::new).collect(Collectors.toList());
