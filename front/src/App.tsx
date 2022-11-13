@@ -1,13 +1,16 @@
-import { ChakraProvider } from '@chakra-ui/react';
-import './App.css';
-import AppRouter from './router/AppRouter';
+import { ChakraProvider } from "@chakra-ui/react";
+import "./App.css";
+import AppRouter from "./router/AppRouter";
+import { RecoilRoot } from "recoil";
 
-const App : React.FC = () => {
+const App: React.FC = () => {
   return (
-    <ChakraProvider>
-      <AppRouter/>
-    </ChakraProvider>
+    <RecoilRoot>
+      <ChakraProvider>
+        <AppRouter />
+      </ChakraProvider>
+    </RecoilRoot>
   );
-}
+};
 
 export default App;

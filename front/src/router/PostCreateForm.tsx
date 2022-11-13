@@ -4,12 +4,11 @@ import { useEffect, useState } from "react";
 import { Button, Box } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { IUser } from "../global/Types";
+import { useRecoilState } from "recoil";
+import { userState } from "../global/State";
 
 const baseUrl = "http://localhost:8080";
 
-interface IPostCreateFormProps {
-  user: IUser;
-}
 
 interface IPostCreateForm {
   memberId?: number;
@@ -17,8 +16,11 @@ interface IPostCreateForm {
   contents: string;
 }
 
-const PostCreateForm = ({ user }: IPostCreateFormProps) => {
+const PostCreateForm = () => {
   const navigate = useNavigate();
+
+  // useState와 비슷한 모양...
+  const [user, setUser] = useRecoilState<IUser>(userState);
 
   useEffect(() => {
     if (user != null) console.table(user);

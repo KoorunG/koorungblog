@@ -1,16 +1,16 @@
-import { Box, Button, Container, SimpleGrid, VStack } from "@chakra-ui/react";
+import { Box, Button, Container, VStack } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import PostPrev from "../components/PostPrev";
 import { BASE_URL } from "../global/Constants";
+import { userState } from "../global/State";
 import { IPost, IUser } from "../global/Types";
 
-interface IPostListPorps {
-  user?: IUser;
-}
 
-const PostList = ({ user }: IPostListPorps): JSX.Element => {
+const PostList = (): JSX.Element => {
+  const [user, setUser] = useRecoilState<IUser>(userState);
   const [posts, setPosts] = useState<IPost[]>([]);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const PostList = ({ user }: IPostListPorps): JSX.Element => {
   }, []);
 
   const getAllPosts = async () => {
-    const posts = await axios.get(BASE_URL + `/members/${user?.id}/posts`).catch((err) => {
+    const posts = await axios.get(BASE_URL + `/members/${user.id}/posts`).catch((err) => {
       console.table(err.response.data);
     });
 

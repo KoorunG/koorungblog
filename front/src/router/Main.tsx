@@ -1,12 +1,14 @@
 import { Container, Heading } from "@chakra-ui/react";
 import { useEffect } from "react";
+import { useRecoilState } from "recoil";
+import { userState } from "../global/State";
 import { IUser } from "../global/Types";
 
-interface IMainProps {
-  user : IUser;
-}
+const Main = () : JSX.Element => {
 
-const Main = ({user} : IMainProps) : JSX.Element => {
+  // useState와 비슷한 모양...
+  const [user, setUser] = useRecoilState<IUser>(userState);
+
   useEffect(() => {
     if(user != null) console.table(user);
   }, []);

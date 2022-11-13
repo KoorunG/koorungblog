@@ -10,6 +10,8 @@ import { BASE_URL } from "../global/Constants";
 import CustomModal from "../components/CustomModal";
 import { PasswordInput } from "../components/PasswordInput";
 import { IUser } from "../global/Types";
+import { userState } from "../global/State";
+import { useRecoilState } from "recoil";
 
 
 interface ILoginRequest {
@@ -17,12 +19,10 @@ interface ILoginRequest {
   password : string;
 }
 
-interface ILoginProps {
-  setUser : React.Dispatch<React.SetStateAction<IUser>>;
-}
 
-
-const Login = ({setUser} : ILoginProps) : JSX.Element => {
+const Login = () : JSX.Element => {
+  // useState와 비슷한 모양...
+  const [user, setUser] = useRecoilState<IUser>(userState);
   const [loginRequest, setLoginRequest] = useState<ILoginRequest>({loginId : '', password : ''});
 
   // 로그인 post 요청을 보내는 함수
