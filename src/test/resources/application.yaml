@@ -1,7 +1,8 @@
 # DataSource
 spring:
   profiles:
-    default: test
+#    default: test
+    active: test
 
   # DB에 들어가는 값 확인용 임시 설정 #
   datasource:

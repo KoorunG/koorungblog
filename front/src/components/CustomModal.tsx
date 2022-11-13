@@ -5,6 +5,7 @@ interface IControlModal {
   confirmFunc?: React.MouseEventHandler<HTMLButtonElement>;
   colorScheme?: AllowedColorScheme;
   buttonName?: string;
+  buttonSize?: "sm" | "md" | "lg" | "xs";
   modalTitle?: string;
   modalBody?: string;
 }
@@ -15,6 +16,7 @@ const CustomModal = ({
   },
   colorScheme = "linkedin",
   buttonName = "디폴트버튼",
+  buttonSize = "md",
   modalTitle = "디폴트타이틀",
   modalBody = "디폴트바디",
 }: IControlModal): JSX.Element => {
@@ -24,7 +26,7 @@ const CustomModal = ({
   // 랜더링
   return (
     <>
-      <Button onClick={onOpen} colorScheme={colorScheme}>
+      <Button onClick={onOpen} colorScheme={colorScheme} size={buttonSize}>
         {buttonName}
       </Button>
 

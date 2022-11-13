@@ -1,7 +1,5 @@
 package com.koorung.blog.domain.post.application;
 
-import com.koorung.blog.domain.member.application.MemberService;
-import com.koorung.blog.domain.member.dto.MemberCreateDto;
 import com.koorung.blog.domain.member.entity.Address;
 import com.koorung.blog.domain.member.entity.Member;
 import com.koorung.blog.domain.member.entity.Role;
@@ -32,7 +30,7 @@ public class PostService {
     @PostConstruct
     public void init() {
         Member member = memberRepository.save(Member.builder()
-                .loginId("test")
+                .loginId("logintest")
                 .password("test1234!@")
                 .username("테스트유저")
                 .role(Role.ADMIN)

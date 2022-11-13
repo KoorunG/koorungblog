@@ -37,11 +37,18 @@ public class Comment extends BaseTimeEntity {
     private Post post;
 
     @Builder
-    public Comment(String contents, String password, Post post) {
+    public Comment(String contents, String password) {
         this.contents = contents;
         this.likeCount = 0;
         this.isPublic = true;
         this.password = password;
+    }
+
+    public void configMember(Member member) {
+        this.member = member;
+    }
+
+    public void configPost(Post post) {
         this.post = post;
     }
 
@@ -53,7 +60,7 @@ public class Comment extends BaseTimeEntity {
     }
 
     /**
-     * 좋아요 수를 1 감소시키는 메소드 <br>
+     * 좋아요 수를 1 감소시키는 메소드 <br/>
      * (0 미만일 경우 예외 발생)
      */
     public void minusLikeCount() {

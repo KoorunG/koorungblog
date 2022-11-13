@@ -6,7 +6,6 @@ import com.koorung.blog.domain.post.dto.PostCreateDto;
 import com.koorung.blog.domain.post.dto.PostUpdateDto;
 import com.koorung.blog.domain.relation.CategoryPost;
 import com.koorung.blog.domain.relation.TagPost;
-import com.koorung.blog.domain.tag.entity.Tag;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,6 +32,7 @@ public class Post extends BaseTimeEntity {
     private Integer likeCount;
 
     private Integer viewCount;
+
 
     @OneToMany(mappedBy = "post")
     private List<CategoryPost> categoryPosts = new ArrayList<>();

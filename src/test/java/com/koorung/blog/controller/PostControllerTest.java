@@ -5,22 +5,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.koorung.blog.domain.member.entity.Member;
 import com.koorung.blog.domain.member.entity.Role;
 import com.koorung.blog.domain.member.repository.MemberRepository;
-import com.koorung.blog.domain.post.entity.Post;
+import com.koorung.blog.domain.post.application.PostService;
 import com.koorung.blog.domain.post.dto.PostCreateDto;
 import com.koorung.blog.domain.post.dto.PostUpdateDto;
+import com.koorung.blog.domain.post.entity.Post;
 import com.koorung.blog.domain.post.exception.PostNotExistException;
 import com.koorung.blog.domain.post.repository.PostRepository;
-import com.koorung.blog.domain.post.application.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -38,8 +36,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PostControllerTest {
 
     @BeforeEach
-    void init() {
+    void tearup() {
         postRepository.deleteAll();
+        memberRepository.deleteAll();
     }
 
     @Autowired

@@ -1,8 +1,8 @@
 # DataSource
 spring:
   profiles:
-    default: dev
-
+    active: dev
+  #    default: dev
   datasource:
     # mariadb 연결
     username: koorung

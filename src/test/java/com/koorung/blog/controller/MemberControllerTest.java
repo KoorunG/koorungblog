@@ -8,24 +8,24 @@ import com.koorung.blog.domain.member.entity.Address;
 import com.koorung.blog.domain.member.entity.Member;
 import com.koorung.blog.domain.member.entity.Role;
 import com.koorung.blog.domain.member.repository.MemberRepository;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.*;
+import com.koorung.blog.domain.post.repository.PostRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static java.nio.charset.StandardCharsets.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.springframework.http.MediaType.*;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -36,9 +36,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class MemberControllerTest {
 
-    @Autowired
-    private MemberRepository repository;
-
     private MockHttpSession mockHttpSession;
 
     @BeforeEach
@@ -46,9 +43,10 @@ class MemberControllerTest {
         mockHttpSession = new MockHttpSession();
     }
 
-    @AfterEach
+    @BeforeEach
     public void tearup() {
-        repository.deleteAll();
+        postRepository.deleteAll();
+        memberRepository.deleteAll();
     }
 
     @Autowired
@@ -59,6 +57,9 @@ class MemberControllerTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private PostRepository postRepository;
 
     @Test
     @DisplayName("회원가입 성공 테스트")

@@ -1,12 +1,11 @@
 package com.koorung.blog.service;
 
 import com.koorung.blog.domain.member.application.MemberService;
+import com.koorung.blog.domain.member.dto.MemberCreateDto;
 import com.koorung.blog.domain.member.dto.MemberLoginDto;
 import com.koorung.blog.domain.member.dto.MemberUpdateDto;
-import com.koorung.blog.domain.member.entity.Address;
 import com.koorung.blog.domain.member.entity.Member;
 import com.koorung.blog.domain.member.entity.Role;
-import com.koorung.blog.domain.member.dto.MemberCreateDto;
 import com.koorung.blog.domain.member.exception.AlreadyExistMemberException;
 import com.koorung.blog.domain.member.exception.MemberNotExistException;
 import com.koorung.blog.domain.member.exception.PasswordInvalidException;
@@ -17,7 +16,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -175,7 +173,7 @@ class MemberServiceTest {
     @Test
     @DisplayName("모든 회원 찾기")
     void find_all_members() {
-        //given
+//        //given
         List<Member> memberList = IntStream.rangeClosed(1, 5)
                 .mapToObj(i -> Member.builder()
                         .loginId("test" + i)
