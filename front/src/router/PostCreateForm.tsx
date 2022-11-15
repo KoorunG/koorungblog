@@ -1,10 +1,8 @@
-import { Container, Flex, Heading, Input, Textarea } from "@chakra-ui/react";
+import { Box, Button, Container, Flex, Heading, Input, Textarea } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Box } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { IUser } from "../global/Types";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { userState } from "../global/State";
 
 const baseUrl = "http://localhost:8080";
@@ -19,8 +17,7 @@ interface IPostCreateForm {
 const PostCreateForm = () => {
   const navigate = useNavigate();
 
-  // useState와 비슷한 모양...
-  const [user, setUser] = useRecoilState<IUser>(userState);
+  const user = useRecoilValue(userState);
 
   useEffect(() => {
     if (user != null) console.table(user);

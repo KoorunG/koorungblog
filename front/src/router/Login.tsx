@@ -6,12 +6,12 @@ import {
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../global/Constants";
+import { useRecoilState } from "recoil";
 import CustomModal from "../components/CustomModal";
 import { PasswordInput } from "../components/PasswordInput";
-import { IUser } from "../global/Types";
+import { BASE_URL } from "../global/Constants";
 import { userState } from "../global/State";
-import { useRecoilState } from "recoil";
+import { IUser } from "../global/Types";
 
 
 interface ILoginRequest {
@@ -30,10 +30,14 @@ const Login = () : JSX.Element => {
     // #1. 에러처리
     const res = await axios
       .post(BASE_URL + "/login", loginRequest)
+      // 에러가 존재한다면
       .catch((err) => {
         const { errorCode, message } = err.response.data;
+        // alert창 팝업 후
         window.alert(`${message} ::: [${errorCode}]`);
-      });
+        // 새로고침
+        navigate(0);
+  });
 
     // #2. catch에서 잡히지 않을 경우
     if (res) {

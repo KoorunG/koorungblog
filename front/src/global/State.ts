@@ -1,4 +1,4 @@
-import { atom } from "recoil";
+import { atom, selector } from "recoil";
 import { IUser } from "./Types";
 
 // user 전역상태

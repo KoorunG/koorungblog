@@ -8,7 +8,7 @@ import PostDetail from "./PostDetail";
 import PostList from "./PostList";
 
 const AppRouter = () => {
-  
+
   return (
     <>
       <BrowserRouter>
